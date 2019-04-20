@@ -11,12 +11,12 @@ import cv2
 
 
 # construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video",
-    help="path to the (optional) video file")
-ap.add_argument("-b", "--buffer", type=int, default=64,
-    help="max buffer size")
-args = vars(ap.parse_args())
+#ap = argparse.ArgumentParser()
+#ap.add_argument("-v", "--video",
+ #   help="path to the (optional) video file")
+#ap.add_argument("-b", "--buffer", type=int, default=64,
+ #   help="max buffer size")
+#args = vars(ap.parse_args())
  
 # define the lower and upper boundaries of the colors in the HSV color space
 lower = {'red':(166, 84, 141), 'green':(66, 122, 129), 'blue':(97, 100, 117), 'yellow':(23, 59, 119), 'orange':(0, 50, 80)} #assign new item lower['blue'] = (93, 10, 0)
@@ -29,20 +29,16 @@ colors = {'red':(0,0,255), 'green':(0,255,0), 'blue':(255,0,0), 'yellow':(0, 255
  
 # if a video path was not supplied, grab the reference
 # to the webcam
-#if not args.get("video", False):
+#cv2.namedWindow("Window")
 camera = cv2.VideoCapture(0)
-    
 # otherwise, grab a reference to the video file
-#else:
- #   camera = cv2.VideoCapture(args["video"])
 # keep looping
 while True:
     # grab the current frame
-     (grabbed, frame) = camera.read()
+    (grabbed, frame) = camera.read()
     # if we are viewing a video and we did not grab a frame,
     # then we have reached the end of the video
-     if args.get("video") and not grabbed:
-         break
+     
 
     #IP webcam image stream 
     #URL = 'http://10.254.254.102:8080/shot.jpg'
@@ -52,11 +48,11 @@ while True:
  
     # resize the frame, blur it, and convert it to the HSV
     # color space
-frame = imutils.resize(frame, width=600)
-blurred = cv2.GaussianBlur(frame, (11, 11), 0)
-hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
+    frame = imutils.resize(frame, width=600)
+    blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+    hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
     #for each color in dictionary check object in frame
-for key, value in upper.items():
+    for key, value in upper.items():
         # construct a mask for the color from dictionary`1, then perform
         # a series of dilations and erosions to remove any small
         # blobs left in the mask
@@ -90,10 +86,11 @@ for key, value in upper.items():
 
      
     # show the frame to our screen
-cv2.imshow("Frame", frame)
+    cv2.imshow("Frame", frame)
     
-key = cv2.waitKey(1) & 0xFF
-
+    key = cv2.waitKey(1) & 0xFF
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 # cleanup the camera and close any open windows
 camera.release()
 cv2.destroyAllWindows()
